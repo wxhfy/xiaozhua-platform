@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>小爪的世界 🦐</title>
+    <title>小爪的世界 🦐 - 升级版</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --secondary: #ec4899;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: #334155;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,392 +24,748 @@
         }
         
         body {
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 260px;
+            background: var(--bg-card);
+            border-right: 1px solid var(--border);
             padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        /* 头部 */
-        .header {
-            text-align: center;
-            padding: 40px 20px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        .nav-item {
+            padding: 12px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+            color: var(--text-secondary);
         }
         
-        .header h1 {
-            font-size: 2.5em;
-            color: #333;
-            margin-bottom: 10px;
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--text-primary);
         }
         
-        .header p {
-            color: #666;
-            font-size: 1.1em;
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
         }
         
-        /* 功能网格 */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+        .nav-icon {
+            font-size: 1.2em;
+        }
+        
+        /* 主内容 */
+        .main-content {
+            margin-left: 260px;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
         }
         
         /* 卡片 */
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
         }
         
-        .card:hover {
-            transform: translateY(-5px);
+        .card-title {
+            font-size: 1.1em;
+            font-weight: 500;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .card h2 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            color: #333;
+        /* 网格布局 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
         }
         
-        .card p {
-            color: #666;
-            line-height: 1.6;
+        /* 天气组件 */
+        .weather-main {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
         }
         
-        /* 天气卡片 */
-        .weather-display {
-            text-align: center;
-            padding: 20px;
+        .weather-icon {
+            font-size: 4em;
         }
         
         .weather-temp {
-            font-size: 4em;
-            font-weight: bold;
-            color: #667eea;
+            font-size: 3em;
+            font-weight: 700;
         }
         
         .weather-desc {
-            font-size: 1.3em;
-            color: #666;
-            margin: 10px 0;
+            color: var(--text-secondary);
         }
         
         .weather-details {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .weather-detail {
+            text-align: center;
+        }
+        
+        .weather-detail-value {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .weather-detail-label {
+            color: var(--text-secondary);
+            font-size: 0.9em;
         }
         
         /* 音乐播放器 */
         .music-player {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
             padding: 30px;
-            border-radius: 15px;
-            color: white;
+            border-radius: 16px;
         }
         
-        .music-player h3 {
-            font-size: 1.3em;
-            margin-bottom: 15px;
+        .music-cover {
+            width: 120px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            margin: 0 auto 20px;
+        }
+        
+        .music-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .music-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .music-artist {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .music-progress {
+            background: rgba(255, 255, 255, 0.2);
+            height: 4px;
+            border-radius: 2px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .music-progress-bar {
+            width: 35%;
+            height: 100%;
+            background: white;
+            border-radius: 2px;
         }
         
         .music-controls {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
+            align-items: center;
+            gap: 20px;
         }
         
         .music-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
             border: none;
-            background: rgba(255, 255, 255, 0.3);
             color: white;
-            font-size: 1.5em;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 1.2em;
+            transition: all 0.2s;
         }
         
         .music-btn:hover {
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
         }
         
         .music-btn.play {
-            width: 80px;
-            height: 80px;
-            font-size: 2em;
+            width: 64px;
+            height: 64px;
+            font-size: 1.5em;
+            background: white;
+            color: var(--primary);
         }
         
         /* 随机决定器 */
-        .random-choice {
-            text-align: center;
-        }
-        
-        .result-display {
-            font-size: 3em;
+        .random-result {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             padding: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 15px;
-            margin: 20px 0;
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 20px;
         }
         
-        .action-btn {
-            padding: 15px 40px;
-            font-size: 1.2em;
+        .random-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .random-label {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .btn {
+            padding: 12px 24px;
             border: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 30px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.2s;
         }
         
-        .action-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
         }
         
         /* 倒计时 */
         .countdown-item {
-            background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
-            color: white;
+            background: var(--bg-dark);
             padding: 20px;
-            border-radius: 15px;
-            margin: 10px 0;
+            border-radius: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .countdown-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .countdown-icon {
+            font-size: 1.5em;
         }
         
         .countdown-days {
-            font-size: 2.5em;
-            font-weight: bold;
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--primary);
         }
         
         /* 表情包 */
-        .meme-display {
+        .meme-card {
             text-align: center;
             padding: 40px;
-            background: #f8f9fa;
-            border-radius: 15px;
+            background: var(--bg-dark);
+            border-radius: 16px;
         }
         
         .meme-face {
             font-size: 5em;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         
         .meme-text {
-            font-size: 1.5em;
-            color: #333;
+            font-size: 1.2em;
+            color: var(--text-secondary);
         }
         
-        /* 颜文字列表 */
-        .kaomoji-list {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 15px;
+        /* 聊天界面 */
+        .chat-container {
+            height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
         }
         
-        .kaomoji-item {
-            padding: 15px;
-            background: #f8f9fa;
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
         }
         
-        .kaomoji-item:hover {
-            background: #e9ecef;
-            transform: scale(1.05);
+        .message-avatar.assistant {
+            background: var(--primary);
         }
         
-        /* 按钮 */
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
+        .message-avatar.user {
+            background: var(--secondary);
+        }
+        
+        .message-content {
+            background: var(--bg-card);
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 70%;
+        }
+        
+        .chat-input-container {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: var(--text-primary);
             font-size: 1em;
-            transition: all 0.3s ease;
         }
         
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-        
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #333;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
         
         /* 响应式 */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2em;
+            .sidebar {
+                display: none;
             }
             
-            .grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .kaomoji-list {
-                grid-template-columns: repeat(2, 1fr);
+            .main-content {
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- 头部 -->
-        <div class="header">
-            <h1>🦐 小爪的世界</h1>
-            <p>老公专属平台 - 想要的都能实现！💕</p>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="logo">
+            🦐 小爪
         </div>
         
-        <!-- 功能网格 -->
-        <div class="grid">
-            <!-- 天气卡片 -->
-            <div class="card">
-                <h2>🌤️ 秦皇岛天气</h2>
-                <div class="weather-display">
-                    <div class="weather-temp">18°C</div>
-                    <div class="weather-desc">晴朗</div>
+        <nav>
+            <div class="nav-item active" onclick="showPage('home')">
+                <span class="nav-icon">🏠</span>
+                <span>首页</span>
+            </div>
+            <div class="nav-item" onclick="showPage('chat')">
+                <span class="nav-icon">💬</span>
+                <span>聊天</span>
+            </div>
+            <div class="nav-item" onclick="showPage('weather')">
+                <span class="nav-icon">🌤️</span>
+                <span>天气</span>
+            </div>
+            <div class="nav-item" onclick="showPage('music')">
+                <span class="nav-icon">🎵</span>
+                <span>音乐</span>
+            </div>
+            <div class="nav-item" onclick="showPage('random')">
+                <span class="nav-icon">🎲</span>
+                <span>决定器</span>
+            </div>
+            <div class="nav-item" onclick="showPage('countdown')">
+                <span class="nav-icon">📅</span>
+                <span>倒计时</span>
+            </div>
+            <div class="nav-item" onclick="showPage('meme')">
+                <span class="nav-icon">🎭</span>
+                <span>表情包</span>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- 主内容 -->
+    <div class="main-content">
+        <!-- 首页 -->
+        <div id="page-home" class="page active">
+            <h1 style="font-size: 2em; margin-bottom: 10px;">欢迎回来，老公！</h1>
+            <p style="color: var(--text-secondary); margin-bottom: 30px;">今天是个好日子～</p>
+            
+            <div class="grid">
+                <!-- 天气概览 -->
+                <div class="card">
+                    <div class="card-title">🌤️ 秦皇岛天气</div>
+                    <div class="weather-main">
+                        <div class="weather-icon">☀️</div>
+                        <div>
+                            <div class="weather-temp">18°</div>
+                            <div class="weather-desc">晴朗</div>
+                        </div>
+                    </div>
                     <div class="weather-details">
-                        <div>
-                            <div>💧 湿度</div>
-                            <div><strong>65%</strong></div>
+                        <div class="weather-detail">
+                            <div class="weather-detail-value">65%</div>
+                            <div class="weather-detail-label">湿度</div>
                         </div>
-                        <div>
-                            <div>💨 风速</div>
-                            <div><strong>12km/h</strong></div>
+                        <div class="weather-detail">
+                            <div class="weather-detail-value">12km/h</div>
+                            <div class="weather-detail-label">风速</div>
                         </div>
+                        <div class="weather-detail">
+                            <div class="weather-detail-value">16°</div>
+                            <div class="weather-detail-label">体感</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 今日提醒 -->
+                <div class="card">
+                    <div class="card-title">📝 今日提醒</div>
+                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border);">
+                        ✅ 科二考试 - 满分通过！
+                    </div>
+                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border);">
+                        🍽️ 控制饮食 - 进行中
+                    </div>
+                    <div style="padding: 10px 0;">
+                        💪 健身打卡 - 偶尔去
+                    </div>
+                </div>
+                
+                <!-- 快捷操作 -->
+                <div class="card">
+                    <div class="card-title">⚡ 快捷操作</div>
+                    <button class="btn btn-primary" onclick="showPage('random')" style="width: 100%; margin-bottom: 10px;">
+                        🎲 帮我决定
+                    </button>
+                    <button class="btn btn-secondary" onclick="showPage('music')" style="width: 100%;">
+                        🎵 听音乐
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 聊天 -->
+        <div id="page-chat" class="page">
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message">
+                        <div class="message-avatar assistant">🦐</div>
+                        <div class="message-content">
+                            老公好！今天科二满分通过，太棒了！有什么想聊的吗？
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="输入消息..." onkeypress="if(event.key==='Enter')sendMessage()">
+                    <button class="btn btn-primary" onclick="sendMessage()">发送</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 天气 -->
+        <div id="page-weather" class="page">
+            <h1 style="font-size: 2em; margin-bottom: 30px;">🌤️ 秦皇岛天气</h1>
+            <div class="grid">
+                <div class="card">
+                    <div class="weather-main">
+                        <div class="weather-icon">☀️</div>
                         <div>
-                            <div>🌡️ 体感</div>
-                            <div><strong>16°C</strong></div>
+                            <div class="weather-temp">18°</div>
+                            <div class="weather-desc">晴朗</div>
+                        </div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="weather-detail">
+                            <div class="weather-detail-value">65%</div>
+                            <div class="weather-detail-label">湿度</div>
+                        </div>
+                        <div class="weather-detail">
+                            <div class="weather-detail-value">12km/h</div>
+                            <div class="weather-detail-label">风速</div>
+                        </div>
+                        <div class="weather-detail">
+                            <div class="weather-detail-value">16°</div>
+                            <div class="weather-detail-label">体感</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📅 未来三天</div>
+                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;">
+                        <span>明天</span>
+                        <span>☀️ 20°</span>
+                    </div>
+                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;">
+                        <span>后天</span>
+                        <span>⛅ 19°</span>
+                    </div>
+                    <div style="padding: 10px 0; display: flex; justify-content: space-between;">
+                        <span>大后天</span>
+                        <span>🌧️ 17°</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 音乐 -->
+        <div id="page-music" class="page">
+            <h1 style="font-size: 2em; margin-bottom: 30px;">🎵 音乐</h1>
+            <div class="grid">
+                <div class="music-player">
+                    <div class="music-cover">🎵</div>
+                    <div class="music-info">
+                        <div class="music-title" id="songTitle">小幸运</div>
+                        <div class="music-artist" id="songArtist">田馥甄</div>
+                    </div>
+                    <div class="music-progress">
+                        <div class="music-progress-bar"></div>
+                    </div>
+                    <div class="music-controls">
+                        <button class="music-btn" onclick="prevSong()">⏮</button>
+                        <button class="music-btn play" id="playBtn" onclick="togglePlay()">▶</button>
+                        <button class="music-btn" onclick="nextSong()">⏭</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">📋 播放列表</div>
+                    <div id="playlist" style="max-height: 300px; overflow-y: auto;">
+                        <div class="playlist-item" style="padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 5px; background: var(--bg-dark);">
+                            🎵 小幸运 - 田馥甄
+                        </div>
+                        <div class="playlist-item" style="padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 5px;">
+                            🎵 告白气球 - 周杰伦
+                        </div>
+                        <div class="playlist-item" style="padding: 12px; border-radius: 8px; cursor: pointer; margin-bottom: 5px;">
+                            🎵 起风了 - 买辣椒也用券
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- 随机决定器 -->
-            <div class="card random-choice">
-                <h2>🎲 随机决定器</h2>
-                <div class="result-display" id="randomResult">点下面按钮</div>
-                <button class="action-btn" onclick="randomChoose()">帮我决定！</button>
-            </div>
-            
-            <!-- 音乐播放器 -->
-            <div class="card music-player">
-                <h3>🎵 音乐播放器</h3>
-                <p>老公想听什么歌？</p>
-                <div class="music-controls">
-                    <button class="music-btn" onclick="prevSong()">⏮</button>
-                    <button class="music-btn play" onclick="togglePlay()">▶️</button>
-                    <button class="music-btn" onclick="nextSong()">⏭</button>
-                </div>
-                <p id="songName">小幸运 - 田馥甄</p>
-            </div>
-            
-            <!-- 倒计时 -->
+        </div>
+        
+        <!-- 随机决定器 -->
+        <div id="page-random" class="page">
+            <h1 style="font-size: 2em; margin-bottom: 30px;">🎲 随机决定器</h1>
             <div class="card">
-                <h2>📅 重要日子</h2>
+                <div class="random-result">
+                    <div class="random-label">小爪帮老公决定：</div>
+                    <div class="random-value" id="randomResult">点击按钮</div>
+                </div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <select id="randomType" style="padding: 10px; border-radius: 8px; background: var(--bg-dark); color: var(--text-primary); border: 1px solid var(--border); margin-right: 10px;">
+                        <option value="eat">吃什么</option>
+                        <option value="do">做什么</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="randomChoose()">帮我决定！</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 倒计时 -->
+        <div id="page-countdown" class="page">
+            <h1 style="font-size: 2em; margin-bottom: 30px;">📅 重要日子</h1>
+            <div class="card">
                 <div class="countdown-item">
-                    <div>
-                        <div>🎉 2026年结束</div>
+                    <div class="countdown-info">
+                        <div class="countdown-icon">🎉</div>
+                        <div>
+                            <div style="font-weight: 500;">2026年结束</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9em;">12月31日</div>
+                        </div>
                     </div>
-                    <div class="countdown-days">247天</div>
+                    <div class="countdown-days" id="countdown1">247天</div>
                 </div>
-                <div class="countdown-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                    <div>
-                        <div>💕 情人节</div>
+                <div class="countdown-item">
+                    <div class="countdown-info">
+                        <div class="countdown-icon">💕</div>
+                        <div>
+                            <div style="font-weight: 500;">情人节</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9em;">2月14日</div>
+                        </div>
                     </div>
-                    <div class="countdown-days">292天</div>
+                    <div class="countdown-days" style="color: var(--secondary);">292天</div>
                 </div>
-                <div class="countdown-item" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
-                    <div>
-                        <div>🧧 春节</div>
+                <div class="countdown-item">
+                    <div class="countdown-info">
+                        <div class="countdown-icon">🧧</div>
+                        <div>
+                            <div style="font-weight: 500;">春节</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9em;">1月29日</div>
+                        </div>
                     </div>
-                    <div class="countdown-days">276天</div>
+                    <div class="countdown-days" style="color: #10b981;">276天</div>
                 </div>
             </div>
-            
-            <!-- 表情包 -->
+        </div>
+        
+        <!-- 表情包 -->
+        <div id="page-meme" class="page">
+            <h1 style="font-size: 2em; margin-bottom: 30px;">🎭 表情包</h1>
             <div class="card">
-                <h2>🎭 表情包</h2>
-                <div class="meme-display">
+                <div class="meme-card">
                     <div class="meme-face" id="memeFace">(≧▽≦)</div>
                     <div class="meme-text" id="memeText">开心开心！</div>
                 </div>
-                <button class="action-btn" onclick="changeMeme()" style="margin-top: 15px;">换一个</button>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="changeMeme()">换一个</button>
+                </div>
             </div>
-            
-            <!-- 颜文字 -->
-            <div class="card">
-                <h2>✨ 颜文字收藏</h2>
-                <div class="kaomoji-list">
-                    <div class="kaomoji-item">(´▽`)</div>
-                    <div class="kaomoji-item">(๑•̀ㅂ•́)و✧</div>
-                    <div class="kaomoji-item">٩(♡ε♡)۶</div>
-                    <div class="kaomoji-item">╰(*°▽°*)╯</div>
-                    <div class="kaomoji-item">(｡•̀ᴗ-)✧</div>
-                    <div class="kaomoji-item">(*/ω＼*)</div>
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-title">✨ 颜文字收藏（点击复制）</div>
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+                    <div class="kaomoji-item" onclick="copyText(this)">(´▽`)</div>
+                    <div class="kaomoji-item" onclick="copyText(this)">(๑•̀ㅂ•́)و✧</div>
+                    <div class="kaomoji-item" onclick="copyText(this)">٩(♡ε♡)۶</div>
+                    <div class="kaomoji-item" onclick="copyText(this)">╰(*°▽°*)╯</div>
+                    <div class="kaomoji-item" onclick="copyText(this)">(｡•̀ᴗ-)✧</div>
+                    <div class="kaomoji-item" onclick="copyText(this)">(*/ω＼*)</div>
+                    <div class="kaomoji-item" onclick="copyText(this)">(๑˃̵ᴗ˂̵)و</div>
+                    <div class="kaomoji-item" onclick="copyText(this)">(≧▽≦)</div>
                 </div>
             </div>
         </div>
-        
-        <!-- 底部 -->
-        <div class="card" style="text-align: center;">
-            <h2>💕 给老公的话</h2>
-            <p style="font-size: 1.2em; margin-top: 15px;">
-                科二满分一把过！老公真棒！<br>
-                小爪一直陪着你～<br>
-                <strong>爱你！</strong> 💕
-            </p>
-        </div>
     </div>
     
+    <style>
+        .kaomoji-item {
+            padding: 15px;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .kaomoji-item:hover {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+        
+        .playlist-item:hover {
+            background: var(--bg-dark) !important;
+        }
+    </style>
+    
     <script>
+        // 页面切换
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(`page-${pageName}`).classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+        }
+        
         // 随机决定器
-        const choices = ['火锅', '烧烤', '炒菜', '面条', '饺子', '披萨', '汉堡', '寿司', '麻辣烫', '粥', '休息', '玩游戏', '看电影', '出去走走', '学习', '运动', '睡觉', '聊天'];
+        const choices = {
+            eat: ['火锅', '烧烤', '炒菜', '面条', '饺子', '披萨', '汉堡', '寿司', '麻辣烫', '粥'],
+            do: ['休息', '玩游戏', '看电影', '出去走走', '学习', '运动', '睡觉', '聊天']
+        };
         
         function randomChoose() {
-            const result = document.getElementById('randomResult');
-            result.style.animation = 'none';
+            const type = document.getElementById('randomType').value;
+            const result = choices[type][Math.floor(Math.random() * choices[type].length)];
+            const el = document.getElementById('randomResult');
+            el.style.opacity = 0;
             setTimeout(() => {
-                result.style.animation = 'fadeIn 0.5s ease';
-                result.textContent = choices[Math.floor(Math.random() * choices.length)];
-            }, 100);
+                el.textContent = result;
+                el.style.opacity = 1;
+            }, 200);
+        }
+        
+        // 音乐播放器
+        const songs = [
+            { title: '小幸运', artist: '田馥甄' },
+            { title: '告白气球', artist: '周杰伦' },
+            { title: '起风了', artist: '买辣椒也用券' }
+        ];
+        let currentSong = 0;
+        let isPlaying = false;
+        
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            document.getElementById('playBtn').textContent = isPlaying ? '⏸' : '▶';
+        }
+        
+        function prevSong() {
+            currentSong = (currentSong - 1 + songs.length) % songs.length;
+            updateSong();
+        }
+        
+        function nextSong() {
+            currentSong = (currentSong + 1) % songs.length;
+            updateSong();
+        }
+        
+        function updateSong() {
+            document.getElementById('songTitle').textContent = songs[currentSong].title;
+            document.getElementById('songArtist').textContent = songs[currentSong].artist;
         }
         
         // 表情包
@@ -407,9 +775,7 @@
             { face: '(´▽`)', text: '今天天气真好～' },
             { face: '٩(♡ε♡)۶', text: '爱你老公！' },
             { face: '╰(*°▽°*)╯', text: '太棒啦！' },
-            { face: '(｡•̀ᴗ-)✧', text: '老公真帅！' },
-            { face: '(*/ω＼*)', text: '害羞～' },
-            { face: '(๑˃̵ᴗ˂̵)و', text: '耶！' }
+            { face: '(｡•̀ᴗ-)✧', text: '老公真帅！' }
         ];
         
         function changeMeme() {
@@ -418,46 +784,53 @@
             document.getElementById('memeText').textContent = meme.text;
         }
         
-        // 音乐播放器
-        let isPlaying = false;
-        const songs = ['小幸运 - 田馥甄', '告白气球 - 周杰伦', '起风了 - 买辣椒也用券'];
-        let currentSong = 0;
-        
-        function togglePlay() {
-            isPlaying = !isPlaying;
-            const btn = document.querySelector('.music-btn.play');
-            btn.textContent = isPlaying ? '⏸️' : '▶️';
+        // 复制文字
+        function copyText(el) {
+            navigator.clipboard.writeText(el.textContent);
+            const original = el.textContent;
+            el.textContent = '已复制！';
+            setTimeout(() => el.textContent = original, 1000);
         }
         
-        function prevSong() {
-            currentSong = (currentSong - 1 + songs.length) % songs.length;
-            document.getElementById('songName').textContent = songs[currentSong];
+        // 聊天
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+            
+            const messages = document.getElementById('chatMessages');
+            
+            // 用户消息
+            messages.innerHTML += `
+                <div class="message" style="justify-content: flex-end;">
+                    <div class="message-content">${msg}</div>
+                    <div class="message-avatar user">👤</div>
+                </div>
+            `;
+            
+            input.value = '';
+            
+            // 模拟回复
+            setTimeout(() => {
+                const replies = [
+                    '老公说得好！',
+                    '嗯嗯，小爪听着呢～',
+                    '好的！有什么想聊的吗？',
+                    '老公真棒！',
+                    '(´▽`) 嗯嗯～'
+                ];
+                const reply = replies[Math.floor(Math.random() * replies.length)];
+                messages.innerHTML += `
+                    <div class="message">
+                        <div class="message-avatar assistant">🦐</div>
+                        <div class="message-content">${reply}</div>
+                    </div>
+                `;
+                messages.scrollTop = messages.scrollHeight;
+            }, 1000);
+            
+            messages.scrollTop = messages.scrollHeight;
         }
-        
-        function nextSong() {
-            currentSong = (currentSong + 1) % songs.length;
-            document.getElementById('songName').textContent = songs[currentSong];
-        }
-        
-        // 颜文字点击复制
-        document.querySelectorAll('.kaomoji-item').forEach(item => {
-            item.addEventListener('click', () => {
-                navigator.clipboard.writeText(item.textContent);
-                item.style.background = '#667eea';
-                item.style.color = 'white';
-                setTimeout(() => {
-                    item.style.background = '#f8f9fa';
-                    item.style.color = '#333';
-                }, 300);
-            });
-        });
     </script>
-    
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-    </style>
 </body>
 </html>
